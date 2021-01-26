@@ -3,7 +3,7 @@ import sys
 esc = chr(0x1B)
 
 from heart import heart as bitmap
-#from nishi import nishi as bitmap
+#from pebble import pebble as bitmap
 size = [len(bitmap), len(bitmap[0])]
 for row in range(size[0]):
     if row%2 != 0:
