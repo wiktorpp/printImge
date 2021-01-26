@@ -1,17 +1,12 @@
 from PIL import Image
-import os
-import sys
-esc = chr(0x1B)
 
 path = "C:\\Users\\Małgosia\\Desktop\\heart.bmp"
 
 image = Image.open(path).convert().rotate(90, expand=True)
 bitmap = image.load()
-#print(image.size)
 size = [image.size[0], image.size[1]]
-#import pdb; pdb.set_trace()
 
-print("heart = ", end="")
+print("bitmap = ", end="")
 
 out = []
 for row in range(size[0]):
