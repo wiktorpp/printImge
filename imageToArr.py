@@ -3,8 +3,9 @@ import os
 import sys
 esc = chr(0x1B)
 
-os.system("")
-image = Image.open("C:\\Users\\Małgosia\\Desktop\\heart.bmp").convert().rotate(90, expand=True)
+path = "C:\\Users\\Małgosia\\Desktop\\heart.bmp"
+
+image = Image.open(path).convert().rotate(90, expand=True)
 bitmap = image.load()
 #print(image.size)
 size = [image.size[0], image.size[1]]
