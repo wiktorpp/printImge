@@ -4,6 +4,7 @@ esc = chr(0x1B)
 
 from heart import heart as bitmap
 #from pebble import pebble as bitmap
+#from fox import fox as bitmap
 size = [len(bitmap), len(bitmap[0])]
 for row in range(size[0]):
     if row%2 != 0:
