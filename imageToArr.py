@@ -1,8 +1,10 @@
-from PIL import Image
+from PIL import Image, ImageOps
 
-path = "C:\\Users\\Małgosia\\Desktop\\heart.bmp"
+path = "C:\\Users\\Małgosia\\Desktop\\foxcopy.png"
 
-image = Image.open(path).convert().rotate(90, expand=True)
+image = Image.open(path).convert()
+image = image.rotate(90, expand=True)
+image = ImageOps.flip(image)
 bitmap = image.load()
 size = [image.size[0], image.size[1]]
 
