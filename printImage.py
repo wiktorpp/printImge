@@ -2,25 +2,22 @@ import os
 import sys
 esc = chr(0x1B)
 
-data = """
-000a000b
-ffffff00ffffff000000000000000000ffffff00ffffff00ffffff000000000000000000ffffff00ffffff00
-ffffff0000000000e0204000e020400000000000ffffff0000000000e0204000e020400000000000ffffff00
-00000000e0204000ffffff00ffffff00e020400000000000e0204000e0204000e0204000e020400000000000
-00000000e0204000ffffff00e0204000e0204000e0204000e0204000e0204000e0204000e020400000000000
-00000000e0204000e0204000e0204000e0204000e0204000e0204000e0204000e0204000e020400000000000
-ffffff0000000000e0204000e0204000e0204000e0204000e0204000e0204000e020400000000000ffffff00
-ffffff00ffffff0000000000e0204000e0204000e0204000e0204000e020400000000000ffffff00ffffff00
-ffffff00ffffff00ffffff0000000000e0204000e0204000e020400000000000ffffff00ffffff00ffffff00
-ffffff00ffffff00ffffff00ffffff0000000000e020400000000000ffffff00ffffff00ffffff00ffffff00
-ffffff00ffffff00ffffff00ffffff00ffffff0000000000ffffff00ffffff00ffffff00ffffff00ffffff00
-""".replace('\n','')
-#print(data)
+from heart import data, translucencyMask
+#from fox import data
+#from pebble import data
+
 size = [
     int(data[0:4], 16),
     int(data[4:8], 16)
 ]
 data = data[8:]
+try: translucencyMask
+except:
+    translucencyMask = []
+    for i in range(size[0]):
+        translucencyMask.append([])
+        for j in range(size[1]):
+            translucencyMask[i].append(False)
 
 def getPixel(x, y):
     offset = (x * size[1] + y) * 8
@@ -37,15 +34,44 @@ for row in range(size[0]):
     else:
         for col in range(size[1]):
             pixelOdd = getPixel(row, col)
-            sys.stdout.write(
-                f"{esc}[38;2;{pixelOdd[0]};{pixelOdd[1]};{pixelOdd[2]}m"
-            )
-            try:
+            visibilityOdd = not translucencyMask[row][col]
+            #bitField = "{0:2b}".format(pixelOdd[3])
+            #visibilityOdd = not bool(int(bitField[0]))
+            #print(bitField)
+            #letter = bool(int(bitField[1]))
+            #try:
+            #    pixelEven = getPixel(row + 1, col)
+            #    bitField = "{0:8b}".format(pixelEven[3])
+            #    visibilityEven = not bool(bitField[0])
+            #except:
+            #    translucentEven = True
+            try: 
                 pixelEven = getPixel(row + 1, col)
+                visibilityEven = not translucencyMask[row + 1][col]
+            except: 
+                visibilityEven = False
+            if visibilityOdd == True and visibilityEven == True:
+                sys.stdout.write(
+                    f"{esc}[38;2;{pixelOdd[0]};{pixelOdd[1]};{pixelOdd[2]}m"
+                )
                 sys.stdout.write(
                     f"{esc}[48;2;{pixelEven[0]};{pixelEven[1]};{pixelEven[2]}m"
                 )
-            except:
+                sys.stdout.write("▀")
+            if visibilityOdd == False and visibilityEven == False:
+                sys.stdout.write(f"{esc}[0m ")
+            if visibilityOdd == True and visibilityEven == False:
+                sys.stdout.write(
+                    f"{esc}[38;2;{pixelOdd[0]};{pixelOdd[1]};{pixelOdd[2]}m"
+                )
                 sys.stdout.write(f"{esc}[49m")
-            sys.stdout.write("▀")
+                sys.stdout.write("▀")
+            if visibilityOdd == False and visibilityEven == True:
+                # The colors are flipped
+                sys.stdout.write(f"{esc}[49m")
+                sys.stdout.write(
+                    f"{esc}[38;2;{pixelEven[0]};{pixelEven[1]};{pixelEven[2]}m"
+                )
+                sys.stdout.write("▄")
+            
         print(f"{esc}[0m")
