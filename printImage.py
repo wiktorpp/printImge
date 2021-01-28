@@ -2,8 +2,8 @@ import os
 import sys
 esc = chr(0x1B)
 
-from heart import data, translucencyMask
-#from fox import data
+#from heart import data, translucencyMask
+from fox import data, translucencyMask
 #from pebble import data
 
 size = [
