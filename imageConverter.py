@@ -12,7 +12,6 @@ data = "{0:04x}{1:04x}\n".format(size[0], size[1])
 
 print('data = """')
 
-out = []
 for row in range(size[0]):
     for col in range(size[1]):
         pixel = bitmap[row, col]
