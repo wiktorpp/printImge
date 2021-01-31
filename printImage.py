@@ -2,22 +2,24 @@ import os
 import sys
 esc = chr(0x1B)
 
-#from heart import data, translucencyMask
-from fox import data, translucencyMask
+#from heart import data, transparencyMask
+#from fox import data, transparencyMask
 #from pebble import data
+
+from test import data, transparencyMask
 
 size = [
     int(data[0:4], 16),
     int(data[4:8], 16)
 ]
 data = data[8:]
-try: translucencyMask
+try: transparencyMask
 except:
-    translucencyMask = []
+    transparencyMask = []
     for i in range(size[0]):
-        translucencyMask.append([])
+        transparencyMask.append([])
         for j in range(size[1]):
-            translucencyMask[i].append(False)
+            transparencyMask[i].append(False)
 
 def getPixel(x, y):
     offset = (x * size[1] + y) * 8
@@ -28,13 +30,14 @@ def getPixel(x, y):
         int(data[offset + 6:offset + 8], 16)
     ])
 
+defaultBgState = True
 for row in range(size[0]):
     if row%2 != 0:
         continue
     else:
         for col in range(size[1]):
             pixelOdd = getPixel(row, col)
-            visibilityOdd = not translucencyMask[row][col]
+            visibilityOdd = not transparencyMask[row][col]
             #bitField = "{0:2b}".format(pixelOdd[3])
             #visibilityOdd = not bool(int(bitField[0]))
             #print(bitField)
@@ -44,12 +47,13 @@ for row in range(size[0]):
             #    bitField = "{0:8b}".format(pixelEven[3])
             #    visibilityEven = not bool(bitField[0])
             #except:
-            #    translucentEven = True
+            #    transparentEven = True
             try: 
                 pixelEven = getPixel(row + 1, col)
-                visibilityEven = not translucencyMask[row + 1][col]
+                visibilityEven = not transparencyMask[row + 1][col]
             except: 
                 visibilityEven = False
+
             if visibilityOdd == True and visibilityEven == True:
                 sys.stdout.write(
                     f"{esc}[38;2;{pixelOdd[0]};{pixelOdd[1]};{pixelOdd[2]}m"
@@ -57,18 +61,30 @@ for row in range(size[0]):
                 sys.stdout.write(
                     f"{esc}[48;2;{pixelEven[0]};{pixelEven[1]};{pixelEven[2]}m"
                 )
+                defaultBgState = False
                 sys.stdout.write("▀")
+
             if visibilityOdd == False and visibilityEven == False:
-                sys.stdout.write(f"{esc}[0m ")
+                if defaultBgState == False:
+                    sys.stdout.write(f"{esc}[49m ")
+                    defaultBgState == True
+                else:
+                    sys.stdout.write(" ")
+
             if visibilityOdd == True and visibilityEven == False:
                 sys.stdout.write(
                     f"{esc}[38;2;{pixelOdd[0]};{pixelOdd[1]};{pixelOdd[2]}m"
                 )
-                sys.stdout.write(f"{esc}[49m")
+                if defaultBgState == False:
+                    sys.stdout.write(f"{esc}[49m")
+                    defaultBgState == True
                 sys.stdout.write("▀")
+
             if visibilityOdd == False and visibilityEven == True:
                 # The colors are flipped
-                sys.stdout.write(f"{esc}[49m")
+                if defaultBgState == False:
+                    sys.stdout.write(f"{esc}[49m")
+                    defaultBgState == True
                 sys.stdout.write(
                     f"{esc}[38;2;{pixelEven[0]};{pixelEven[1]};{pixelEven[2]}m"
                 )

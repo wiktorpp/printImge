@@ -1,6 +1,6 @@
 from PIL import Image, ImageOps
 
-path = "C:\\Users\\Małgosia\\Desktop\\image.png"
+path = "C:\\Users\\Małgosia\\Desktop\\test.png"
 
 image = Image.open(path).convert("RGB")
 image = image.rotate(90, expand=True)
@@ -10,7 +10,7 @@ bitmap = image.load()
 size = [image.size[0], image.size[1]]
 data = ""
 
-print('translucencyMaskStr = """')
+print('transparencyMaskStr = """')
 
 for row in range(size[0]):
     for col in range(size[1]):

@@ -47,7 +47,7 @@ ffffff00ffffff00ffffff00ffffff00ffffff00ffffff00ffffff002f00000069494b0069494b00
 ffffff00ffffff00ffffff00ffffff00ffffff00ffffff00ffffff00ffffff0030000000300000002f0000002f00000030000000ffffff00ffffff00ffffff00ffffff00ffffff00ffffff0030000000300000002f0000002f00000030000000ffffff00ffffff00ffffff00ffffff00300000002f0000002f0000002f000000ffffff00ffffff00ffffff00ffffff00ffffff00ffffff00ffffff00ffffff00ffffff00ffffff00
 
 """.replace("\n", "")
-translucencyMaskStr = """
+transparencyMaskStr = """
 100111111111111111111111111111111111111111
 000001111111111111111110000001111111111111
 000000011111111111111000000001111111111111
@@ -95,10 +95,10 @@ translucencyMaskStr = """
 111111110000011111100000111100001111111111
 
 """[1:-1].splitlines()
-translucencyMask = []
-for i in range(len(translucencyMaskStr)):
-    translucencyMask.append([])
-    for j in range(len(translucencyMaskStr[0])):
-        translucencyMask[i].append(
-            bool(int(translucencyMaskStr[i][j]))
+transparencyMask = []
+for i in range(len(transparencyMaskStr)):
+    transparencyMask.append([])
+    for j in range(len(transparencyMaskStr[0])):
+        transparencyMask[i].append(
+            bool(int(transparencyMaskStr[i][j]))
         )

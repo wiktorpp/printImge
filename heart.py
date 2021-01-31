@@ -11,7 +11,7 @@ data = """
 5471940354719403547194035471940300000002e02040020000000254719403547194035471940354719403
 5471940354719403547194035471940354719403000000025471940354719403547194035471940354719403
 """.replace('\n','')
-translucencyMaskStr = """
+transparencyMaskStr = """
 11001110011
 10000100001
 00000000000
@@ -23,10 +23,10 @@ translucencyMaskStr = """
 11110001111
 11111011111
 """[1:-1].splitlines()
-translucencyMask = []
-for i in range(len(translucencyMaskStr)):
-    translucencyMask.append([])
-    for j in range(len(translucencyMaskStr[0])):
-        translucencyMask[i].append(
-            bool(int(translucencyMaskStr[i][j]))
+transparencyMask = []
+for i in range(len(transparencyMaskStr)):
+    transparencyMask.append([])
+    for j in range(len(transparencyMaskStr[0])):
+        transparencyMask[i].append(
+            bool(int(transparencyMaskStr[i][j]))
         )
