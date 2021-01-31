@@ -1,6 +1,6 @@
 from PIL import Image, ImageOps
 
-path = "C:\\Users\\Małgosia\\Desktop\\test.png"
+path = "C:\\Users\\Małgosia\\Desktop\\image.png"
 
 image = Image.open(path).convert("RGB")
 image = image.rotate(90, expand=True)
