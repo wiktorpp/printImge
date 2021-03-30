@@ -31,63 +31,66 @@ def getPixel(x, y):
     ])
 
 defaultBgState = True
-for row in range(size[0]):
-    if row%2 != 0:
-        continue
-    else:
-        for col in range(size[1]):
-            pixelOdd = getPixel(row, col)
-            visibilityOdd = not transparencyMask[row][col]
-            #bitField = "{0:2b}".format(pixelOdd[3])
-            #visibilityOdd = not bool(int(bitField[0]))
-            #print(bitField)
-            #letter = bool(int(bitField[1]))
-            #try:
-            #    pixelEven = getPixel(row + 1, col)
-            #    bitField = "{0:8b}".format(pixelEven[3])
-            #    visibilityEven = not bool(bitField[0])
-            #except:
-            #    transparentEven = True
-            try: 
-                pixelEven = getPixel(row + 1, col)
-                visibilityEven = not transparencyMask[row + 1][col]
-            except: 
-                visibilityEven = False
+pixelLastOdd = None
+pixelLastEven = None
+for row in range(0, size[0], 2):
+    for col in range(size[1]):
+        pixelOdd = getPixel(row, col)
+        visibilityOdd = not transparencyMask[row][col]
+        #bitField = "{0:2b}".format(pixelOdd[3])
+        #visibilityOdd = not bool(int(bitField[0]))
+        #print(bitField)
+        #letter = bool(int(bitField[1]))
+        #try:
+        #    pixelEven = getPixel(row + 1, col)
+        #    bitField = "{0:8b}".format(pixelEven[3])
+        #    visibilityEven = not bool(bitField[0])
+        #except:
+        #    transparentEven = True
+        try: 
+            pixelEven = getPixel(row + 1, col)
+            visibilityEven = not transparencyMask[row + 1][col]
+        except: 
+            visibilityEven = False
 
-            if visibilityOdd == True and visibilityEven == True:
+        if visibilityOdd == True and visibilityEven == True:
+            sys.stdout.write(
+                f"{esc}[38;2;{pixelOdd[0]};{pixelOdd[1]};{pixelOdd[2]}m"
+            )
+            sys.stdout.write(
+                f"{esc}[48;2;{pixelEven[0]};{pixelEven[1]};{pixelEven[2]}m"
+            )
+            defaultBgState = False
+            sys.stdout.write("▀")
+
+        if visibilityOdd == False and visibilityEven == False:
+            if defaultBgState == False:
+                sys.stdout.write(f"{esc}[49m ")
+                defaultBgState == True
+            else:
+                sys.stdout.write(" ")
+
+        if visibilityOdd == True and visibilityEven == False:
+            if not pixelOdd == pixelLastOdd:
                 sys.stdout.write(
                     f"{esc}[38;2;{pixelOdd[0]};{pixelOdd[1]};{pixelOdd[2]}m"
                 )
-                sys.stdout.write(
-                    f"{esc}[48;2;{pixelEven[0]};{pixelEven[1]};{pixelEven[2]}m"
-                )
-                defaultBgState = False
-                sys.stdout.write("▀")
+            if defaultBgState == False:
+                sys.stdout.write(f"{esc}[49m")
+                defaultBgState == True
+            sys.stdout.write("▀")
 
-            if visibilityOdd == False and visibilityEven == False:
-                if defaultBgState == False:
-                    sys.stdout.write(f"{esc}[49m ")
-                    defaultBgState == True
-                else:
-                    sys.stdout.write(" ")
+        if visibilityOdd == False and visibilityEven == True:
+            # The colors are flipped
+            if defaultBgState == False:
+                sys.stdout.write(f"{esc}[49m")
+                defaultBgState == True
+            sys.stdout.write(
+                f"{esc}[38;2;{pixelEven[0]};{pixelEven[1]};{pixelEven[2]}m"
+            )
+            sys.stdout.write("▄")
+        
+        pixelLastOdd = pixelOdd
+        pixelLastEven = pixelEven
 
-            if visibilityOdd == True and visibilityEven == False:
-                sys.stdout.write(
-                    f"{esc}[38;2;{pixelOdd[0]};{pixelOdd[1]};{pixelOdd[2]}m"
-                )
-                if defaultBgState == False:
-                    sys.stdout.write(f"{esc}[49m")
-                    defaultBgState == True
-                sys.stdout.write("▀")
-
-            if visibilityOdd == False and visibilityEven == True:
-                # The colors are flipped
-                if defaultBgState == False:
-                    sys.stdout.write(f"{esc}[49m")
-                    defaultBgState == True
-                sys.stdout.write(
-                    f"{esc}[38;2;{pixelEven[0]};{pixelEven[1]};{pixelEven[2]}m"
-                )
-                sys.stdout.write("▄")
-            
-        print(f"{esc}[0m")
+    print(f"{esc}[0m")
