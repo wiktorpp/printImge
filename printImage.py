@@ -31,8 +31,8 @@ def getPixel(x, y):
     ])
 
 defaultBgState = True
-pixelLastOdd = None
-pixelLastEven = None
+pixelPriorOdd = None
+pixelPriorEven = None
 for row in range(0, size[0], 2):
     for col in range(size[1]):
         pixelOdd = getPixel(row, col)
@@ -71,7 +71,7 @@ for row in range(0, size[0], 2):
                 sys.stdout.write(" ")
 
         if visibilityOdd == True and visibilityEven == False:
-            if not pixelOdd == pixelLastOdd:
+            if not pixelOdd == pixelPriorOdd:
                 sys.stdout.write(
                     f"{esc}[38;2;{pixelOdd[0]};{pixelOdd[1]};{pixelOdd[2]}m"
                 )
@@ -90,7 +90,7 @@ for row in range(0, size[0], 2):
             )
             sys.stdout.write("▄")
         
-        pixelLastOdd = pixelOdd
-        pixelLastEven = pixelEven
+        pixelPriorOdd = pixelOdd
+        pixelPriorEven = pixelEven
 
     print(f"{esc}[0m")
